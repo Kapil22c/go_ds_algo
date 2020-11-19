@@ -2,74 +2,34 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 )
 
+func partition(a []int, lo, hi int) int {
+	p := a[hi]
+	for j := lo; j < hi; j++ {
+		if a[j] < p {
+			a[j], a[lo] = a[lo], a[j]
+			lo++
+		}
+	}
+
+	a[lo], a[hi] = a[hi], a[lo]
+	return lo
+}
+
+func quickSort(a []int, lo, hi int) {
+	if lo > hi {
+		return
+	}
+
+	p := partition(a, lo, hi)
+	quickSort(a, lo, p-1)
+	quickSort(a, p+1, hi)
+}
+
 func main() {
-
-	slice := generateSlice(20)
-	fmt.Println("\n--- Unsorted --- \n\n", slice)
-	fmt.Println("\n--- Sorted ---\n\n", mergeSort(slice), "\n")
-}
-
-// Generates a slice of size, size filled with random numbers
-func generateSlice(size int) []int {
-
-	slice := make([]int, size, size)
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < size; i++ {
-		slice[i] = rand.Intn(999) - rand.Intn(999)
-	}
-	return slice
-}
-
-func mergeSort(items []int) []int {
-	var num = len(items)
-
-	if num == 1 {
-		return items
-	}
-
-	middle := int(num / 2)
-	var (
-		left  = make([]int, middle)
-		right = make([]int, num-middle)
-	)
-	for i := 0; i < num; i++ {
-		if i < middle {
-			left[i] = items[i]
-		} else {
-			right[i-middle] = items[i]
-		}
-	}
-
-	return merge(mergeSort(left), mergeSort(right))
-}
-
-func merge(left, right []int) (result []int) {
-	result = make([]int, len(left)+len(right))
-
-	i := 0
-	for len(left) > 0 && len(right) > 0 {
-		if left[0] < right[0] {
-			result[i] = left[0]
-			left = left[1:]
-		} else {
-			result[i] = right[0]
-			right = right[1:]
-		}
-		i++
-	}
-
-	for j := 0; j < len(left); j++ {
-		result[i] = left[j]
-		i++
-	}
-	for j := 0; j < len(right); j++ {
-		result[i] = right[j]
-		i++
-	}
-
-	return
+	list := []int{18, 51, 24, 57, 89, 4, 62, 53, 23, 93, 41, 95, 84, 88}
+	
+	quickSort(list, 0, len(list)-1)
+	fmt.Println(list)
 }
